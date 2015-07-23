@@ -97,7 +97,13 @@ public class ConsumerNetworkClient implements Closeable {
                                               AbstractRequest request) {
         long now = time.milliseconds();
         RequestFutureCompletionHandler future = new RequestFutureCompletionHandler();
-        RequestHeader header = client.nextRequestHeader(api);
+        RequestHeader header;
+        if (api == ApiKeys.OFFSET_COMMIT)
+            header = client.nextRequestHeader(api, (short) 1);
+        else
+            header = client.nextRequestHeader(api);
+
+//        RequestHeader header = client.nextRequestHeader(api);
         RequestSend send = new RequestSend(node.idString(), header, request.toStruct());
         put(node, new ClientRequest(now, true, send, future));
         return future;

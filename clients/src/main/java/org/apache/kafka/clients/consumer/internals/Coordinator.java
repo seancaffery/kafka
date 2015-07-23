@@ -421,15 +421,15 @@ public final class Coordinator {
         if (offsets.isEmpty())
             return RequestFuture.voidSuccess();
 
+        long now = time.milliseconds();
         // create the offset commit request
         Map<TopicPartition, OffsetCommitRequest.PartitionData> offsetData;
         offsetData = new HashMap<TopicPartition, OffsetCommitRequest.PartitionData>(offsets.size());
         for (Map.Entry<TopicPartition, Long> entry : offsets.entrySet())
-            offsetData.put(entry.getKey(), new OffsetCommitRequest.PartitionData(entry.getValue(), ""));
+            offsetData.put(entry.getKey(), new OffsetCommitRequest.PartitionData(entry.getValue(), now, ""));
         OffsetCommitRequest req = new OffsetCommitRequest(this.groupId,
                 this.generation,
                 this.consumerId,
-                OffsetCommitRequest.DEFAULT_RETENTION_TIME,
                 offsetData);
 
         return client.send(consumerCoordinator, ApiKeys.OFFSET_COMMIT, req)
