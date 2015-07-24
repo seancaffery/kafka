@@ -126,6 +126,14 @@ public interface KafkaClient extends Closeable {
      */
     public RequestHeader nextRequestHeader(ApiKeys key);
 
+    /*
+     * Generate a request header for the next request
+     *
+     * @param key The API key of the request
+     * @param version The API key's version of the request
+     */
+    public RequestHeader nextRequestHeader(ApiKeys key, short version);
+
     /**
      * Wake up the client if it is currently blocked waiting for I/O
      */
